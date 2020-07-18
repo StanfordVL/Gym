@@ -1,0 +1,71 @@
+<mujoco model="reacher">
+	<asset>
+		<texture builtin="gradient" height="256" rgb1=".9 .9 1." rgb2=".2 .3 .4" type="skybox" width="256"/>
+		<texture name="texplane" builtin="checker" height="512" rgb1=".2 .3 .4" rgb2=".1 0.15 0.2" type="2d" width="512"/>
+		<material name="floorplane" reflectance="0.5" texrepeat="1 1" texture="texplane" texuniform="true"/>
+	</asset>
+	<compiler angle="radian" inertiafromgeom="true"/>
+	<default>
+		<joint armature="1" damping="1" limited="true"/>
+		<geom contype="0" friction="1 0.1 0.1" rgba="0.7 0.7 0 1"/>
+	</default>
+	<option gravity="0 0 -9.81" integrator="RK4" timestep="0.01"/>
+	<worldbody>
+		<!-- Arena -->
+		<geom conaffinity="0" contype="0" material="floorplane" name="ground" pos="0 0 0" rgba="0.9 0.9 0.9 1" size="1 1 10" type="plane"/>
+		<body name="table" pos="0 -0.2 0.075">
+			<geom type="box" contype="1" size="0.25 0.2 0.075" rgba="0.4 0.4 0.4 1"/>
+		</body>
+		<light diffuse=".8 .8 .8" dir="0 -.15 -1" directional="false" pos="1 1 4.0" specular="0.3 0.3 0.3" castshadow="false"/>
+    	<light diffuse=".8 .8 .8" dir="0 -.15 -1" directional="false" pos="-3. -3. 4.0" specular="0.3 0.3 0.3" castshadow="false"/>
+		<!-- Arm -->
+		<geom conaffinity="2" contype="2" fromto="0 0 0 0 0 0.25" name="root" rgba="0.2 0.2 0.2 1" size=".01" type="capsule"/>
+		<body name="body0" pos="0 0 .25">
+			<geom fromto="-0.01 0 0 0.01 0 0" name="hinge" rgba="0.5 0.2 0.6 1" size=".011" type="cylinder"/>
+			<geom fromto="-0.012 0 0 0.012 0 0" name="hinge0" rgba="0.2 0.2 0.2 1" size=".002" type="cylinder"/>
+			<geom fromto="0 0 0 0 0 0.05" name="link0" rgba="0.0 0.4 0.6 1" size=".01" type="capsule"/>
+			<joint axis="0 0 1" limited="true" name="joint0" range="-1.57 1.57" pos="0 0 0" type="hinge" damping="0.1"/>
+			<joint axis="1 0 0" limited="true" name="joint1" range="-1.57 1.57" pos="0 0 0" type="hinge" damping="0.1"/>
+			<body name="body01" pos="0 0 0.05">
+				<joint axis="0 0 1" limited="true" name="joint2" pos="0 0 0" range="-1.57 1.57" type="hinge" damping="0.1"/>
+				<geom fromto="0 0 -0.01 0 0 0.01" name="hinge00" rgba="0.5 0.2 0.6 1" size=".011" type="cylinder"/>
+				<geom fromto="0 0 0 0 0 0.05" name="link01" rgba="0.0 0.4 0.6 1" size=".01" type="capsule"/>
+				<geom fromto="-0.01 0 0.05 0.01 0 0.05" name="hinge01" contype="1" rgba="0.5 0.2 0.6 1" size=".011" type="cylinder"/>
+				<geom fromto="-0.012 0 0.05 0.012 0 0.05" name="hinge011" rgba="0.2 0.2 0.2 1" size=".002" type="cylinder"/>
+				<body name="body1" pos="0 0 0.05">
+					<joint axis="1 0 0" limited="true" name="joint3" pos="0 0 0" range="-3.14 0" type="hinge" damping="0.1"/>
+					<geom fromto="0 0 0 0 -0.05 0" name="link1" rgba="0.0 0.4 0.6 1" size=".01" type="capsule"/>
+					<body name="body11" pos="0 -0.05 0">
+						<joint axis="0 1 0" limited="true" name="joint4" pos="0 0 0" range="-1.57 1.57" type="hinge" damping="0.1"/>
+						<geom fromto="0 -0.01 0 0 0.01 0" name="hinge10" rgba="0.5 0.2 0.6 1" size=".011" type="cylinder"/>
+						<geom fromto="0 0 0 0 -0.05 0" name="link11" rgba="0.0 0.4 0.6 1" size=".01" type="capsule"/>
+						<geom fromto="-0.01 -0.05 0 0.01 -0.05 0" name="hinge1" contype="1" rgba="0.5 0.2 0.6 1" size=".011" type="cylinder"/>
+						<geom fromto="-0.012 -0.05 0 0.012 -0.05 0" name="hinge11" rgba="0.2 0.2 0.2 1" size=".002" type="cylinder"/>
+						<body name="body2" pos="0 -0.05 0">
+							<geom fromto="0 0 0 0 0 -0.05" conaffinity="2" contype="2" name="link2" rgba="0.0 0.4 0.6 1" size=".01" type="capsule"/>
+							<joint axis="1 0 0" limited="true" name="joint5" pos="0 0 0" range="-4.02 0.78" type="hinge" damping="0.1"/>
+							<body name="fingertip" pos="0 0 -0.06">
+								<geom conaffinity="1" contype="1" name="fingertip" pos="0 0 0" rgba="0.0 0.8 0.6 1" size=".01" type="sphere"/>
+							</body>
+						</body>
+					</body>
+				</body>
+			</body>
+		</body>
+		<!-- Target -->
+		<body name="target" pos="0 -0.20 .2">
+			<geom conaffinity="0" contype="0" name="target" pos="0 0 0" rgba="0.4 0.8 0.2 1" size=".009" type="sphere"/>
+		</body>
+	</worldbody>
+	<contact>
+		<exclude body1="body0" body2="target"/>
+	</contact>
+	<actuator>
+		<motor ctrllimited="true" ctrlrange="-2.0 2.0" gear="1" joint="joint0"/>
+		<motor ctrllimited="true" ctrlrange="-3.0 3.0" gear="1" joint="joint1"/>
+		<motor ctrllimited="true" ctrlrange="-5.0 5.0" gear="1" joint="joint2"/>
+		<motor ctrllimited="true" ctrlrange="-5.0 5.0" gear="1" joint="joint3"/>
+		<motor ctrllimited="true" ctrlrange="-5.0 5.0" gear="1" joint="joint4"/>
+		<motor ctrllimited="true" ctrlrange="-8.0 8.0" gear="1" joint="joint5"/>
+	</actuator>
+</mujoco>
