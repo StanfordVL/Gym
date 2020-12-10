@@ -84,6 +84,9 @@ gym/envs/robotics/utils.py
 gym/envs/robotics/assets/LICENSE.md
 gym/envs/robotics/assets/fetch/pick_and_place.xml
 gym/envs/robotics/assets/fetch/push.xml
+gym/envs/robotics/assets/fetch/push_dec_fric.xml
+gym/envs/robotics/assets/fetch/push_inc_fric.xml
+gym/envs/robotics/assets/fetch/push_inc_mass.xml
 gym/envs/robotics/assets/fetch/reach.xml
 gym/envs/robotics/assets/fetch/robot.xml
 gym/envs/robotics/assets/fetch/shared.xml
