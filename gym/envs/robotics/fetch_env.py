@@ -1,7 +1,7 @@
 import numpy as np
 from . import rotations, robot_env, utils
 
-FIXED_TARGET = np.array([1.25,  0.55,  0.425])
+FIXED_TARGET = np.array([1.15,  0.55,  0.425])
 
 def goal_distance(goal_a, goal_b):
     assert goal_a.shape == goal_b.shape
