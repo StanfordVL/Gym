@@ -1,5 +1,6 @@
 import numpy as np
 from . import rotations, robot_env, utils
+from collections import OrderedDict
 
 FIXED_TARGET = np.array([1.15,  0.55,  0.425])
 
@@ -113,12 +114,23 @@ class FetchEnv(robot_env.RobotEnv):
             grip_pos, object_pos.ravel(), object_rel_pos.ravel(), gripper_state, object_rot.ravel(),
             object_velp.ravel(), object_velr.ravel(), grip_velp, gripper_vel,
         ])
-
-        return {
-            'observation': obs.copy(),
-            'achieved_goal': achieved_goal.copy(),
-            'desired_goal': self.goal.copy(),
-        }
+        
+        image = self.sim.render(camera_name='external_camera_0', 
+                                width=192,
+                                height=192,
+                                depth=0)
+        
+        #return {
+        #    'observation': obs.copy(),
+        #    'achieved_goal': achieved_goal.copy(),
+        #    'desired_goal': self.goal.copy(),
+        #}
+        return OrderedDict([
+            ('observation', obs.copy()),
+            ('achieved_goal', achieved_goal.copy()),
+            ('desired_goal', self.goal.copy()),
+            ('image', image),
+        ])
 
     def _viewer_setup(self):
         body_id = self.sim.model.body_name2id('robot0:gripper_link')
