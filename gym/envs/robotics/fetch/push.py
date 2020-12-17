@@ -1,6 +1,7 @@
 import os
 from .... import utils
 from .. import fetch_env
+import copy
 import numpy as np
 
 # Ensure we get the path separator correct on windows
@@ -24,12 +25,12 @@ class FetchPushEnv(fetch_env.FetchEnv, utils.EzPickle):
             #'robot0:torso_lift_joint': 1.0,
             #'robot0:head_pan_joint' : 1.0,
             #'robot0:head_tilt_joint' : 1.0,
-            'robot0:shoulder_pan_joint' : np.random.uniform(-0.2, 0.2),
+            #'robot0:shoulder_pan_joint' : np.random.uniform(-0.2, 0.2),
             #'robot0:shoulder_lift_joint' : np.random.uniform(-0.1, 0.1),
             #'robot0:upperarm_roll_joint' : np.random.uniform(-0.1, 0.1),
-            'robot0:elbow_flex_joint' : np.random.uniform(-0.2, 0.2),
+            #'robot0:elbow_flex_joint' : np.random.uniform(-0.2, 0.2),
             #'robot0:forearm_roll_joint' : np.random.uniform(-0.1, 0.1),
-            'robot0:wrist_flex_joint' : np.random.uniform(-0.2, 0.2),
+            #'robot0:wrist_flex_joint' : np.random.uniform(-0.2, 0.2),
             #'robot0:wrist_roll_joint' : np.random.uniform(-0.1, 0.1),
             'object0:joint': [1.25, 0.53, 0.4, 1., 0., 0., 0.],
         }
@@ -43,6 +44,28 @@ class FetchPushEnv(fetch_env.FetchEnv, utils.EzPickle):
         # TODO move magic numbers
         self.contact_reward = 0.2
         self.contact_shaped_reward = 0.1
+
+    def reset(self):
+        initial_qpos = {
+            'robot0:slide0': 0.405,
+            'robot0:slide1': 0.48,
+            'robot0:slide2': 0.0,
+            #'robot0:torso_lift_joint': 1.0,
+            #'robot0:head_pan_joint' : 1.0,
+            #'robot0:head_tilt_joint' : 1.0,
+            'robot0:shoulder_pan_joint' : np.random.uniform(-0.2, 0.2),
+            #'robot0:shoulder_lift_joint' : np.random.uniform(-0.1, 0.1),
+            #'robot0:upperarm_roll_joint' : np.random.uniform(-0.1, 0.1),
+            'robot0:elbow_flex_joint' : np.random.uniform(-0.2, 0.2),
+            #'robot0:forearm_roll_joint' : np.random.uniform(-0.1, 0.1),
+            'robot0:wrist_flex_joint' : np.random.uniform(-0.2, 0.2),
+            #'robot0:wrist_roll_joint' : np.random.uniform(-0.1, 0.1),
+            'object0:joint': [1.25, 0.53, 0.4, 1., 0., 0., 0.],
+        }
+
+        self.seed()
+        self._env_setup(initial_qpos=initial_qpos)
+        self.initial_state = copy.deepcopy(self.sim.get_state())
 
     def compute_reward(self, achieved_goal, goal, info):
         # Compute distance between goal and the achieved goal.
