@@ -7,9 +7,9 @@ import numpy as np
 # Ensure we get the path separator correct on windows
 MODEL_XML_PATH = [
     os.path.join('fetch', 'push.xml'),
-    os.path.join('fetch', 'push_inc_mass.xml'),
-    os.path.join('fetch', 'push_inc_fric.xml'),
+    os.path.join('fetch', 'push_inc_fric.xml'), # TODO change back
     os.path.join('fetch', 'push_dec_fric.xml'),
+    os.path.join('fetch', 'push_inc_mass.xml'),
 ]
 
 def goal_distance(goal_a, goal_b):
@@ -34,8 +34,9 @@ class FetchPushEnv(fetch_env.FetchEnv, utils.EzPickle):
             #'robot0:wrist_roll_joint' : np.random.uniform(-0.1, 0.1),
             'object0:joint': [1.25, 0.53, 0.4, 1., 0., 0., 0.],
         }
+        self.bounds_sel = task_idx
         fetch_env.FetchEnv.__init__(
-            self, MODEL_XML_PATH[task_idx], has_object=True, block_gripper=True, n_substeps=20,
+            self, MODEL_XML_PATH[self.bounds_sel], has_object=True, block_gripper=True, n_substeps=20,
             gripper_extra_height=0.0, target_in_the_air=False, target_offset=0.0,
             obj_range=0.15, target_range=0.15, distance_threshold=0.05,
             initial_qpos=initial_qpos, reward_type=reward_type)
@@ -44,6 +45,9 @@ class FetchPushEnv(fetch_env.FetchEnv, utils.EzPickle):
         # TODO move magic numbers
         self.contact_reward = 0.2
         self.contact_shaped_reward = 0.1
+
+    def set_task(self, task_idx):
+        self.bounds_sel = task_idx
 
     def compute_reward(self, achieved_goal, goal, info):
         # Compute distance between goal and the achieved goal.
