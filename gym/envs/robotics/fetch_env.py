@@ -42,7 +42,7 @@ class FetchEnv(robot_env.RobotEnv):
         self.target_range = target_range
         self.distance_threshold = distance_threshold
         self.reward_type = reward_type
-        self.fixed_target = fixed_target
+        # self.fixed_target = fixed_target
 
         super(FetchEnv, self).__init__(
             model_path=model_path, n_substeps=n_substeps, n_actions=4,
@@ -154,14 +154,8 @@ class FetchEnv(robot_env.RobotEnv):
         # Randomize start position of object.
         if self.has_object:
             object_xpos = self.initial_gripper_xpos[:2]
-            # put the block on the path to the target
-            if self.fixed_target:
-                target_dir = (FIXED_TARGET[:2] - self.initial_gripper_xpos[:2]) / np.linalg.norm(FIXED_TARGET[:2] - self.initial_gripper_xpos[:2])
-                object_xpos = self.initial_gripper_xpos[:2] + 0.1*target_dir
-            else:
-                # force the end-effector to be close to the block but not too close so the robot can find the right place to contact the block
-                while np.linalg.norm(object_xpos - self.initial_gripper_xpos[:2]) < 0.05 or np.linalg.norm(object_xpos - self.initial_gripper_xpos[:2]) > 0.15:
-                    object_xpos = self.initial_gripper_xpos[:2] + self.np_random.uniform(-self.obj_range, self.obj_range, size=2)
+            while np.linalg.norm(object_xpos - self.initial_gripper_xpos[:2]) > 0.1:
+                object_xpos = self.initial_gripper_xpos[:2] + self.np_random.uniform(-self.obj_range, self.obj_range, size=2)
             object_qpos = self.sim.data.get_joint_qpos('object0:joint')
             assert object_qpos.shape == (7,)
             object_qpos[:2] = object_xpos
@@ -171,9 +165,7 @@ class FetchEnv(robot_env.RobotEnv):
         return True
 
     def _sample_goal(self):
-        if self.has_object and self.fixed_target:
-            goal = FIXED_TARGET
-        elif self.has_object: #if self.has_object:
+        if self.has_object:
             goal = self.initial_gripper_xpos[:3] + self.np_random.uniform(-self.target_range, self.target_range, size=3)
             goal += self.target_offset
             goal[2] = self.height_offset

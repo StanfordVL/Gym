@@ -1,15 +1,14 @@
 import os
 from .... import utils
 from .. import fetch_env
-import copy
 import numpy as np
 
 # Ensure we get the path separator correct on windows
 MODEL_XML_PATH = [
     os.path.join('fetch', 'push.xml'),
-    os.path.join('fetch', 'push_inc_fric.xml'), # TODO change back
-    os.path.join('fetch', 'push_dec_fric.xml'),
     os.path.join('fetch', 'push_inc_mass.xml'),
+    os.path.join('fetch', 'push_inc_fric.xml'),
+    os.path.join('fetch', 'push_dec_fric.xml'),
 ]
 
 def goal_distance(goal_a, goal_b):
